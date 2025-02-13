@@ -7,7 +7,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Jump'n'Run Spiel</title>
   <style>
-    /* Grundlayout für Desktop */
     #website {
       background-image: linear-gradient(to bottom, #a7d4ea 50%, #dba55e 50%, #dba55e 100%);
       height: 100%;
@@ -48,7 +47,7 @@
     .heart {
       width: 60px;
       height: 50px;
-      background-image: url(Herz.png);
+      background-image: url(herz.png);
       background-size: cover;
       position: absolute;
     }
@@ -58,7 +57,6 @@
       display: grid;
       justify-content: center;
       align-content: center;
-      z-index: 10;
     }
 
     #start {
@@ -100,7 +98,6 @@
       display: grid;
       justify-content: center;
       align-content: center;
-      z-index: 10;
     }
 
     #gameover {
@@ -162,7 +159,6 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      z-index: 10;
     }
 
     #herz-counter-bild {
@@ -196,12 +192,12 @@
       background: black;
     }
 
-    /* Anpassungen für mobile Endgeräte (z. B. iPad) */
+    /* Anpassungen für mobile Endgeräte */
     @media (max-width: 768px), (max-height: 800px) {
       #character {
         width: 150px;
         height: 150px;
-        top: 70vh;  /* relativ zur Höhe */
+        top: 70vh;
         left: 50%;
         transform: translateX(-50%);
       }
@@ -215,7 +211,6 @@
         height: 170px;
         top: calc(70vh - 40px);
       }
-      /* Start- und Gameover-Felder zentral positionieren */
       #start, #gameover {
         width: 90%;
         padding: 10px;
@@ -248,7 +243,7 @@
       <div id="start">
         <p id="starttext">Bist du bereit loszuspringen?!</p>
         <div id="startbuttonbox">
-          <!-- Start-Button ruft nun showInstructionVideo() auf -->
+          <!-- Start-Button ruft showInstructionVideo() auf -->
           <button onclick="showInstructionVideo()" id="startbutton">Start</button>
         </div>
       </div>
@@ -261,7 +256,7 @@
           <button onclick="resume()" id="gobutton">Beenden</button>
         </div>
         <button onclick="continuePlaying()" id="gobuttoncont">
-          Weiterspielen 20 <img id="gobuttoncont-herz" src="Herz.png" alt="Herz">
+          Weiterspielen 20 <img id="gobuttoncont-herz" src="herz.png" alt="Herz">
         </button>
       </div>
     </div>
@@ -276,8 +271,8 @@
     </video>
   </div>
 
-  <!-- Neues Video-Element für die Spielanleitung -->
-  <video id="instruction-video">
+  <!-- Neues Video-Element für die Spielanleitung (jetzt MP4 und muted) -->
+  <video id="instruction-video" muted>
     <source src="spielanleitung.mp4" type="video/mp4">
     <source src="spielanleitung.mp4" type="video/ogg">
     Your browser does not support the video tag.
@@ -293,8 +288,13 @@
     let stoneGenerationTimeout;
     let heartGenerationTimeout;
 
-    // Funktion, die aufgerufen wird, wenn der Start-Button gedrückt wird.
-    // Sie blendet zuerst das Anleitungsvideo fullscreen ein.
+    // Falls Touchend auf dem Startbutton erforderlich ist (für iOS)
+    document.getElementById("startbutton").addEventListener("touchend", function(e) {
+      e.preventDefault();
+      showInstructionVideo();
+    });
+
+    // Zeigt das Anleitungsvideo an und startet danach das Spiel
     function showInstructionVideo() {
       document.getElementById("startbox").style.display = "none";
       let instrVideo = document.getElementById("instruction-video");
@@ -349,7 +349,7 @@
       heartGenerationTimeout = setTimeout(generateHeart, 200 + Math.random() * 300);
     }
 
-    // Bewegt Objekte (Steine & Herzen) und prüft Kollisionen
+    // Bewegt Objekte (Steine und Herzen) und prüft Kollisionen
     function moveObject(obj, playground, isStone) {
       const currentLeft = parseInt(obj.style.left, 10);
       if (currentLeft <= 0) {
@@ -376,14 +376,14 @@
       }
     }
 
-    // Sprung-Funktion, ausgelöst per Leertaste oder Fingertipp
+    // Sprung-Funktion (per Leertaste oder Fingertipp)
     function jump() {
       if (!gameRunning || jumpCount >= 2) return;
       const character = document.getElementById("character");
       if (jumpCount === 0) {
         character.style.top = '400px'; // Erster Sprung
       } else if (jumpCount === 1) {
-        character.style.top = '250px'; // Zweiter Sprung (höher)
+        character.style.top = '250px'; // Zweiter (höherer) Sprung
       }
       jumpCount++;
       setTimeout(() => {
@@ -410,12 +410,12 @@
       clearInterval(difficultyInterval);
     }
 
-    // Neustart des Spiels
+    // Neustart-Funktion
     function restart() {
       document.location.reload();
     }
 
-    // Beenden des Spiels
+    // Beenden-Funktion
     function resume() {
       window.close();
     }
@@ -437,5 +437,4 @@
     }
   </script>
 </body>
-
 </html>
