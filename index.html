@@ -47,7 +47,7 @@
     .heart {
       width: 60px;
       height: 50px;
-      background-image: url(Herz.png);
+      background-image: url(herz.png);
       background-size: cover;
       position: absolute;
     }
@@ -214,12 +214,12 @@
           <button onclick="resume()" id="gobutton">Beenden</button>
         </div>
         <button onclick="continuePlaying()" id="gobuttoncont">
-          Weiterspielen 20 <img id="gobuttoncont-herz" src="Herz.png" alt="Herz">
+          Weiterspielen 20 <img id="gobuttoncont-herz" src="herz.png" alt="Herz">
         </button>
       </div>
     </div>
     <div id="herz-counter">
-      <img id="herz-counter-bild" src="herz.png" alt="Herzen">
+      <img id="herz-counter-bild" src="herz.png" alt="herzen">
       <p id="herz-counter-text">0</p>
     </div>
     <video id="video-hintergrund" autoplay muted loop>
@@ -242,7 +242,7 @@
     let stoneSpeed = 35; // Geschwindigkeit der Steine
     let minDelay = 2000; // Mindestabstand zwischen Steinen
     let difficultyInterval; // Intervall zur Erhöhung der Schwierigkeit
-    let heartCounter = 0; // Anzahl gesammelter Herzen
+    let heartCounter = 0; // Anzahl gesammelter herzen
     let stoneGenerationTimeout;
     let heartGenerationTimeout;
 
@@ -267,7 +267,7 @@
       gameRunning = true;
       const playground = document.getElementById("playground");
 
-      // Starte den Bewegungs-Loop für Steine und Herzen
+      // Starte den Bewegungs-Loop für Steine und herzen
       setInterval(() => {
         if (!gameRunning) return;
         const stones = document.querySelectorAll('.stone');
@@ -285,7 +285,7 @@
       }, 3000);
     }
 
-    // Globale Funktionen zur Generierung von Steinen und Herzen
+    // Globale Funktionen zur Generierung von Steinen und herzen
     function generateStone() {
       if (!gameRunning) return;
       const playground = document.getElementById("playground");
@@ -304,11 +304,11 @@
       heart.style.left = window.innerWidth + 'px';
       heart.style.top = Math.random() > 0.5 ? '650px' : '500px';
       playground.appendChild(heart);
-      // Herz-Generierung: Intervall auf die Hälfte reduziert (200ms bis ca. 500ms)
+      // herz-Generierung: Intervall auf die Hälfte reduziert (200ms bis ca. 500ms)
       heartGenerationTimeout = setTimeout(generateHeart, 200 + Math.random() * 300);
     }
 
-    // Funktion zum Bewegen von Objekten (Steine und Herzen)
+    // Funktion zum Bewegen von Objekten (Steine und herzen)
     function moveObject(obj, playground, isStone) {
       const currentLeft = parseInt(obj.style.left, 10);
       if (currentLeft <= 0) {
@@ -380,7 +380,7 @@
       window.close();
     }
 
-    // Fortsetzen des Spiels (Kosten: 20 Herzen)
+    // Fortsetzen des Spiels (Kosten: 20 herzen)
     function continuePlaying() {
       if (heartCounter >= 20) {
         heartCounter -= 20;
@@ -392,7 +392,7 @@
         generateStone();
         generateHeart();
       } else {
-        alert("Nicht genug Herzen, um fortzufahren!");
+        alert("Nicht genug herzen, um fortzufahren!");
       }
     }
   </script>
