@@ -127,7 +127,15 @@
       align-items: center;
     }
 
-    #gobutton {
+    /* Eindeutige IDs für die Game Over-Buttons */
+    #gobutton-restart {
+      margin: 10px;
+      width: 150px;
+      height: 40px;
+      font-size: 12pt;
+    }
+
+    #gobutton-resume {
       margin: 10px;
       width: 150px;
       height: 40px;
@@ -252,8 +260,8 @@
       <div id="gameover">
         <p id="gotext">GAME OVER!</p>
         <div id="gobuttons">
-          <button onclick="restart()" id="gobutton">Neustart</button>
-          <button onclick="resume()" id="gobutton">Beenden</button>
+          <button onclick="restart()" id="gobutton-restart">Neustart</button>
+          <button onclick="resume()" id="gobutton-resume">Beenden</button>
         </div>
         <button onclick="continuePlaying()" id="gobuttoncont">
           Weiterspielen 20 <img id="gobuttoncont-herz" src="herz.png" alt="Herz">
@@ -274,7 +282,6 @@
   <!-- Neues Video-Element für die Spielanleitung (jetzt MP4 und muted) -->
   <video id="instruction-video" muted>
     <source src="spielanleitung.mp4" type="video/mp4">
-    <source src="spielanleitung.mp4" type="video/ogg">
     Your browser does not support the video tag.
   </video>
 
@@ -288,10 +295,26 @@
     let stoneGenerationTimeout;
     let heartGenerationTimeout;
 
-    // Falls Touchend auf dem Startbutton erforderlich ist (für iOS)
-    document.getElementById("startbutton").addEventListener("touchend", function(e) {
-      e.preventDefault();
-      showInstructionVideo();
+    // Registriere EventListener erst, wenn das DOM geladen ist
+    window.addEventListener('DOMContentLoaded', function () {
+      // Start-Button: Zusätzlich Touchend
+      document.getElementById("startbutton").addEventListener("touchend", function (e) {
+        e.preventDefault();
+        showInstructionVideo();
+      });
+      // Game Over Buttons
+      document.getElementById("gobutton-restart").addEventListener("touchend", function (e) {
+        e.preventDefault();
+        restart();
+      });
+      document.getElementById("gobutton-resume").addEventListener("touchend", function (e) {
+        e.preventDefault();
+        resume();
+      });
+      document.getElementById("gobuttoncont").addEventListener("touchend", function (e) {
+        e.preventDefault();
+        continuePlaying();
+      });
     });
 
     // Zeigt das Anleitungsvideo an und startet danach das Spiel
@@ -376,7 +399,7 @@
       }
     }
 
-    // Sprung-Funktion (per Leertaste oder Fingertipp)
+    // Sprung-Funktion, ausgelöst per Leertaste oder Fingertipp
     function jump() {
       if (!gameRunning || jumpCount >= 2) return;
       const character = document.getElementById("character");
