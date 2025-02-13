@@ -7,6 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Jump'n'Run Spiel</title>
   <style>
+    /* Grundlayout für Desktop */
     #website {
       background-image: linear-gradient(to bottom, #a7d4ea 50%, #dba55e 50%, #dba55e 100%);
       height: 100%;
@@ -16,7 +17,7 @@
     #character {
       width: 200px;
       height: 200px;
-      background-image: url(dinosaurier.png); /* Icon made by Freepik from www.flaticon.com */
+      background-image: url(dinosaurier.png);
       background-size: cover;
       position: relative;
       top: 650px;
@@ -47,7 +48,7 @@
     .heart {
       width: 60px;
       height: 50px;
-      background-image: url(herz.png);
+      background-image: url(Herz.png);
       background-size: cover;
       position: absolute;
     }
@@ -57,6 +58,7 @@
       display: grid;
       justify-content: center;
       align-content: center;
+      z-index: 10;
     }
 
     #start {
@@ -98,6 +100,7 @@
       display: grid;
       justify-content: center;
       align-content: center;
+      z-index: 10;
     }
 
     #gameover {
@@ -159,6 +162,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
+      z-index: 10;
     }
 
     #herz-counter-bild {
@@ -191,6 +195,49 @@
       z-index: 1000;
       background: black;
     }
+
+    /* Anpassungen für mobile Endgeräte (z. B. iPad) */
+    @media (max-width: 768px), (max-height: 800px) {
+      #character {
+        width: 150px;
+        height: 150px;
+        top: 70vh;  /* relativ zur Höhe */
+        left: 50%;
+        transform: translateX(-50%);
+      }
+      .small {
+        width: 100px;
+        height: 100px;
+        top: calc(70vh + 10px);
+      }
+      .large {
+        width: 100px;
+        height: 170px;
+        top: calc(70vh - 40px);
+      }
+      /* Start- und Gameover-Felder zentral positionieren */
+      #start, #gameover {
+        width: 90%;
+        padding: 10px;
+      }
+      #starttext {
+        font-size: 20pt;
+      }
+      #startbutton {
+        width: 120px;
+        height: 35px;
+        font-size: 10pt;
+      }
+      #herz-counter {
+        top: 1em;
+        right: 1em;
+        width: 5em;
+        height: 2.5em;
+      }
+      #herz-counter-text {
+        font-size: 1.5em;
+      }
+    }
   </style>
 </head>
 
@@ -214,12 +261,12 @@
           <button onclick="resume()" id="gobutton">Beenden</button>
         </div>
         <button onclick="continuePlaying()" id="gobuttoncont">
-          Weiterspielen 20 <img id="gobuttoncont-herz" src="herz.png" alt="Herz">
+          Weiterspielen 20 <img id="gobuttoncont-herz" src="Herz.png" alt="Herz">
         </button>
       </div>
     </div>
     <div id="herz-counter">
-      <img id="herz-counter-bild" src="herz.png" alt="herzen">
+      <img id="herz-counter-bild" src="herz.png" alt="Herzen">
       <p id="herz-counter-text">0</p>
     </div>
     <video id="video-hintergrund" autoplay muted loop>
@@ -231,8 +278,7 @@
 
   <!-- Neues Video-Element für die Spielanleitung -->
   <video id="instruction-video">
-    <source src="spielanleitung.mp4" type="video/mp4">
-    <source src="spielanleitung.mp4" type="video/ogg">
+    <source src="spielanleitung.mov" type="video/quicktime">
     Your browser does not support the video tag.
   </video>
 
@@ -242,32 +288,27 @@
     let stoneSpeed = 35; // Geschwindigkeit der Steine
     let minDelay = 2000; // Mindestabstand zwischen Steinen
     let difficultyInterval; // Intervall zur Erhöhung der Schwierigkeit
-    let heartCounter = 0; // Anzahl gesammelter herzen
+    let heartCounter = 0; // Anzahl gesammelter Herzen
     let stoneGenerationTimeout;
     let heartGenerationTimeout;
 
     // Funktion, die aufgerufen wird, wenn der Start-Button gedrückt wird.
     // Sie blendet zuerst das Anleitungsvideo fullscreen ein.
     function showInstructionVideo() {
-      // Blende das Startfeld aus
       document.getElementById("startbox").style.display = "none";
-      // Zeige das Anleitungsvideo
       let instrVideo = document.getElementById("instruction-video");
       instrVideo.style.display = "block";
       instrVideo.play();
-      // Sobald das Video zu Ende ist, verstecke es und starte das Spiel
       instrVideo.onended = function () {
         instrVideo.style.display = "none";
         startGame();
       };
     }
 
-    // Funktion, die das eigentliche Spiel startet
+    // Startet das eigentliche Spiel
     function startGame() {
       gameRunning = true;
       const playground = document.getElementById("playground");
-
-      // Starte den Bewegungs-Loop für Steine und herzen
       setInterval(() => {
         if (!gameRunning) return;
         const stones = document.querySelectorAll('.stone');
@@ -275,17 +316,15 @@
         const hearts = document.querySelectorAll('.heart');
         hearts.forEach(heart => moveObject(heart, playground, false));
       }, 50);
-
       generateStone();
       generateHeart();
-
       difficultyInterval = setInterval(() => {
         if (minDelay > 1200) minDelay -= 100;
         if (stoneSpeed < 60) stoneSpeed += 0.5;
       }, 3000);
     }
 
-    // Globale Funktionen zur Generierung von Steinen und herzen
+    // Generierung von Steinen (global)
     function generateStone() {
       if (!gameRunning) return;
       const playground = document.getElementById("playground");
@@ -296,6 +335,7 @@
       stoneGenerationTimeout = setTimeout(generateStone, minDelay + Math.random() * 500);
     }
 
+    // Generierung von Herzen (global)
     function generateHeart() {
       if (!gameRunning) return;
       const playground = document.getElementById("playground");
@@ -304,11 +344,11 @@
       heart.style.left = window.innerWidth + 'px';
       heart.style.top = Math.random() > 0.5 ? '650px' : '500px';
       playground.appendChild(heart);
-      // herz-Generierung: Intervall auf die Hälfte reduziert (200ms bis ca. 500ms)
+      // Intervall auf 200 bis ca. 500ms gesetzt
       heartGenerationTimeout = setTimeout(generateHeart, 200 + Math.random() * 300);
     }
 
-    // Funktion zum Bewegen von Objekten (Steine und herzen)
+    // Bewegt Objekte (Steine & Herzen) und prüft Kollisionen
     function moveObject(obj, playground, isStone) {
       const currentLeft = parseInt(obj.style.left, 10);
       if (currentLeft <= 0) {
@@ -316,7 +356,6 @@
       } else {
         obj.style.left = (currentLeft - stoneSpeed) + 'px';
       }
-      // Kollisionsabfrage zwischen Charakter und Objekt
       const charBounds = document.getElementById("character").getBoundingClientRect();
       const objBounds = obj.getBoundingClientRect();
       if (
@@ -336,14 +375,14 @@
       }
     }
 
-    // Sprung-Funktion, ausgelöst durch Drücken der Leertaste oder Fingertipp
+    // Sprung-Funktion, ausgelöst per Leertaste oder Fingertipp
     function jump() {
       if (!gameRunning || jumpCount >= 2) return;
       const character = document.getElementById("character");
       if (jumpCount === 0) {
         character.style.top = '400px'; // Erster Sprung
       } else if (jumpCount === 1) {
-        character.style.top = '250px'; // Zweiter (höherer) Sprung
+        character.style.top = '250px'; // Zweiter Sprung (höher)
       }
       jumpCount++;
       setTimeout(() => {
@@ -352,35 +391,35 @@
       }, 750);
     }
 
-    // Event-Listener für Tastatur (Leertaste)
+    // Tastatursteuerung (Leertaste)
     document.addEventListener('keydown', (event) => {
       if (event.code === 'Space') jump();
     });
 
-    // Event-Listener für mobile Geräte (Fingertipp)
+    // Mobile Steuerung (Touch)
     document.addEventListener('touchstart', (event) => {
-      event.preventDefault(); // Verhindert unerwünschte Browseraktionen
+      event.preventDefault();
       if (gameRunning) jump();
     }, { passive: false });
 
-    // Funktion, die bei Spielende aufgerufen wird
+    // Game Over
     function endGame() {
       document.getElementById("gameover").style.opacity = 100;
       gameRunning = false;
       clearInterval(difficultyInterval);
     }
 
-    // Neustart-Funktion
+    // Neustart des Spiels
     function restart() {
       document.location.reload();
     }
 
-    // Beenden-Funktion
+    // Beenden des Spiels
     function resume() {
       window.close();
     }
 
-    // Fortsetzen des Spiels (Kosten: 20 herzen)
+    // Fortsetzen des Spiels (Kosten: 20 Herzen)
     function continuePlaying() {
       if (heartCounter >= 20) {
         heartCounter -= 20;
@@ -392,7 +431,7 @@
         generateStone();
         generateHeart();
       } else {
-        alert("Nicht genug herzen, um fortzufahren!");
+        alert("Nicht genug Herzen, um fortzufahren!");
       }
     }
   </script>
