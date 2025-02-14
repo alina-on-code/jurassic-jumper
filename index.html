@@ -280,7 +280,7 @@
     </video>
   </div>
 
-  <!-- Neues Video-Element für die Spielanleitung (MP4, muted, playsinline) -->
+  <!-- Neues Video-Element für die Spielanleitung -->
   <video id="instruction-video" muted playsinline webkit-playsinline>
     <source src="spielanleitung.mp4" type="video/mp4">
     Your browser does not support the video tag.
@@ -296,7 +296,7 @@
     let stoneGenerationTimeout;
     let heartGenerationTimeout;
 
-    // Registriere Touch-Listener für Game Over-Buttons, sobald DOM geladen ist
+    // Registriere Touch-Listener für Game Over-Buttons, sobald das DOM geladen ist
     window.addEventListener('DOMContentLoaded', function () {
       document.getElementById("startbutton").addEventListener("touchend", function (e) {
         e.preventDefault();
@@ -402,20 +402,20 @@
     function jump() {
       if (!gameRunning || jumpCount >= 2) return;
       const character = document.getElementById("character");
-      // Für mobile Endgeräte: Verwende höhere Sprünge (kleinere Top-Werte) und kürzere Reset-Zeit
       if (window.matchMedia("(pointer: coarse)").matches) {
+        // Mobile Endgeräte: noch höhere Sprünge
         if (jumpCount === 0) {
-          character.style.top = '350px'; // Höherer erster Sprung
+          character.style.top = '300px'; // Erster Sprung: noch höher
         } else if (jumpCount === 1) {
-          character.style.top = '200px'; // Noch höherer zweiter Sprung
+          character.style.top = '150px'; // Zweiter Sprung: noch höher
         }
         jumpCount++;
         setTimeout(() => {
           character.style.top = '650px';
           jumpCount = 0;
-        }, 900); // Etwas längere Luftzeit auf mobilen Geräten
+        }, 1000);
       } else {
-        // Standardwerte für Desktop
+        // Desktop
         if (jumpCount === 0) {
           character.style.top = '400px'; // Erster Sprung
         } else if (jumpCount === 1) {
@@ -457,7 +457,11 @@
       if (window.matchMedia("(pointer: coarse)").matches) {
         alert("Auf mobilen Geräten kann das Fenster nicht automatisch geschlossen werden. Bitte schließen Sie das Browserfenster manuell.");
       } else {
+        // Versuche, das Fenster zu schließen – falls nicht möglich, Alert
+        window.open('', '_self', '');
         window.close();
+        // Fallback: Falls window.close() nicht funktioniert:
+        alert("Das Fenster konnte nicht automatisch geschlossen werden. Bitte schließen Sie es manuell.");
       }
     }
 
