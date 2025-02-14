@@ -404,30 +404,30 @@
       if (!gameRunning || jumpCount >= 2) return;
       const character = document.getElementById("character");
       if (window.matchMedia("(pointer: coarse)").matches) {
-        // Mobile Endgeräte: Basis: 70vh
-        const base = window.innerHeight * 0.7;
+        // Mobile Endgeräte: Höhere Sprünge – Basis: 70vh
+        const base = window.innerHeight * 0.5;
         if (jumpCount === 0) {
-          character.style.top = (base - 150) + "px"; // Erster Sprung: 150px höher als Basis
+          character.style.top = (base - 150) + "px"; // Erster Sprung: 250px höher
         } else if (jumpCount === 1) {
-          character.style.top = (base - 250) + "px"; // Zweiter Sprung: 250px höher als Basis
+          character.style.top = (base - 250) + "px"; // Zweiter Sprung: 350px höher
         }
         jumpCount++;
         setTimeout(() => {
           character.style.top = base + "px";
           jumpCount = 0;
-        }, 800); // 20% kürzere Luftzeit (von 1000ms auf 800ms)
+        }, 1000);
       } else {
-        // Desktop: Basis: 650px
+        // Desktop: Feste Werte
         if (jumpCount === 0) {
-          character.style.top = '500px'; // Erster Sprung: 150px höher als Basis (650-150=500)
+          character.style.top = '400px'; // Erster Sprung
         } else if (jumpCount === 1) {
-          character.style.top = '350px'; // Zweiter Sprung: 300px höher als Basis (650-300=350)
+          character.style.top = '250px'; // Zweiter (höherer) Sprung
         }
         jumpCount++;
         setTimeout(() => {
           character.style.top = '650px';
           jumpCount = 0;
-        }, 600); // 20% kürzere Luftzeit (von 750ms auf 600ms)
+        }, 750);
       }
     }
 
