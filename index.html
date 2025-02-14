@@ -370,8 +370,8 @@
     
     if (window.matchMedia("(pointer: coarse)").matches) {
       const base = window.innerHeight * 0.67;
-      const lower = base - 100;
-      const upper = base + 20;
+      const lower = base - 120;
+      const upper = base + 30;
       const heartTop = lower + Math.random() * (upper - lower);
       heart.style.top = heartTop + "px";
       heart.style.width = "40px";
