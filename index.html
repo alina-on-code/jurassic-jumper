@@ -359,18 +359,27 @@
       stoneGenerationTimeout = setTimeout(generateStone, minDelay + Math.random() * 500);
     }
 
-    // Generierung von Herzen (global)
-    function generateHeart() {
-      if (!gameRunning) return;
-      const playground = document.getElementById("playground");
-      const heart = document.createElement('div');
-      heart.className = 'heart';
-      heart.style.left = window.innerWidth + 'px';
+   function generateHeart() {
+    if (!gameRunning) return;
+    const playground = document.getElementById("playground");
+    const heart = document.createElement('div');
+    heart.className = 'heart';
+    heart.style.left = window.innerWidth + 'px';
+    
+    if (window.matchMedia("(pointer: coarse)").matches) {
+      const base = window.innerHeight * 0.655;
+      const lower = base - 40;
+      const upper = base + 10;
+      const heartTop = lower + Math.random() * (upper - lower);
+      heart.style.top = heartTop + "px";
+    } else {
+      // Auf Desktop-Geräten bleibt die bisherige Logik:
       heart.style.top = Math.random() > 0.5 ? '650px' : '500px';
-      playground.appendChild(heart);
-      // Intervall auf 200 bis ca. 500ms gesetzt
-      heartGenerationTimeout = setTimeout(generateHeart, 200 + Math.random() * 300);
     }
+    
+    playground.appendChild(heart);
+    heartGenerationTimeout = setTimeout(generateHeart, 200 + Math.random() * 300);
+  }
 
     // Bewegt Objekte (Steine und Herzen) und prüft Kollisionen
     function moveObject(obj, playground, isStone) {
@@ -404,12 +413,11 @@
       if (!gameRunning || jumpCount >= 2) return;
       const character = document.getElementById("character");
       if (window.matchMedia("(pointer: coarse)").matches) {
-        // Mobile Endgeräte: Höhere Sprünge – Basis: 70vh
-        const base = window.innerHeight * 0.64;
+        const base = window.innerHeight * 0.655;
         if (jumpCount === 0) {
-          character.style.top = (base - 150) + "px"; // Erster Sprung: 250px höher
+          character.style.top = (base - 150) + "px"; // Erster Sprung: 150px
         } else if (jumpCount === 1) {
-          character.style.top = (base - 250) + "px"; // Zweiter Sprung: 350px höher
+          character.style.top = (base - 250) + "px"; // Zweiter Sprung: 250px
         }
         jumpCount++;
         setTimeout(() => {
