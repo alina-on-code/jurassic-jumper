@@ -5,7 +5,9 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Jump'n'Run Spiel</title>
+  <title>Jurassic Jumper</title>
+  <link rel="icon" type="image/x-icon" href="dinosaurier.png">
+  
   <style>
     #website {
       background-image: linear-gradient(to bottom, #a7d4ea 50%, #dba55e 50%, #dba55e 100%);
@@ -367,8 +369,8 @@
     heart.style.left = window.innerWidth + 'px';
     
     if (window.matchMedia("(pointer: coarse)").matches) {
-      const base = window.innerHeight * 0.66;
-      const lower = base - 40;
+      const base = window.innerHeight * 0.67;
+      const lower = base - 70;
       const upper = base + 10;
       const heartTop = lower + Math.random() * (upper - lower);
       heart.style.top = heartTop + "px";
@@ -415,7 +417,7 @@
       if (!gameRunning || jumpCount >= 2) return;
       const character = document.getElementById("character");
       if (window.matchMedia("(pointer: coarse)").matches) {
-        const base = window.innerHeight * 0.66;
+        const base = window.innerHeight * 0.67;
         if (jumpCount === 0) {
           character.style.top = (base - 150) + "px"; // Erster Sprung: 150px
         } else if (jumpCount === 1) {
