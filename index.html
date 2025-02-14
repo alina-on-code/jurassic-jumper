@@ -280,7 +280,7 @@
     </video>
   </div>
 
-  <!-- Neues Video-Element für die Spielanleitung -->
+  <!-- Neues Video-Element für die Spielanleitung (MP4, muted, playsinline) -->
   <video id="instruction-video" muted playsinline webkit-playsinline>
     <source src="spielanleitung.mp4" type="video/mp4">
     Your browser does not support the video tag.
@@ -296,7 +296,7 @@
     let stoneGenerationTimeout;
     let heartGenerationTimeout;
 
-    // Registriere Touch-Listener für die Game Over-Buttons, sobald das DOM geladen ist
+    // Registriere Touch-Listener für Game Over-Buttons, sobald DOM geladen ist
     window.addEventListener('DOMContentLoaded', function () {
       document.getElementById("startbutton").addEventListener("touchend", function (e) {
         e.preventDefault();
@@ -402,18 +402,31 @@
     function jump() {
       if (!gameRunning || jumpCount >= 2) return;
       const character = document.getElementById("character");
-      if (jumpCount === 0) {
-        character.style.top = '400px'; // Erster Sprung
-      } else if (jumpCount === 1) {
-        character.style.top = '250px'; // Zweiter (höherer) Sprung
+      // Für mobile Endgeräte: Verwende höhere Sprünge (kleinere Top-Werte) und kürzere Reset-Zeit
+      if (window.matchMedia("(pointer: coarse)").matches) {
+        if (jumpCount === 0) {
+          character.style.top = '350px'; // Höherer erster Sprung
+        } else if (jumpCount === 1) {
+          character.style.top = '200px'; // Noch höherer zweiter Sprung
+        }
+        jumpCount++;
+        setTimeout(() => {
+          character.style.top = '650px';
+          jumpCount = 0;
+        }, 900); // Etwas längere Luftzeit auf mobilen Geräten
+      } else {
+        // Standardwerte für Desktop
+        if (jumpCount === 0) {
+          character.style.top = '400px'; // Erster Sprung
+        } else if (jumpCount === 1) {
+          character.style.top = '250px'; // Zweiter (höherer) Sprung
+        }
+        jumpCount++;
+        setTimeout(() => {
+          character.style.top = '650px';
+          jumpCount = 0;
+        }, 750);
       }
-      jumpCount++;
-      // Bei Touch auf mobilen Geräten wird ein kürzerer Timeout genutzt
-      let timeoutDuration = window.matchMedia("(pointer: coarse)").matches ? 500 : 750;
-      setTimeout(() => {
-        character.style.top = '650px';
-        jumpCount = 0;
-      }, timeoutDuration);
     }
 
     // Tastatursteuerung (Leertaste)
@@ -441,8 +454,11 @@
 
     // Beenden-Funktion
     function resume() {
-      window.close();
-      alert("Auf mobilen Geräten kann das Fenster nicht automatisch geschlossen werden. Bitte schließen Sie das Browserfenster manuell.");
+      if (window.matchMedia("(pointer: coarse)").matches) {
+        alert("Auf mobilen Geräten kann das Fenster nicht automatisch geschlossen werden. Bitte schließen Sie das Browserfenster manuell.");
+      } else {
+        window.close();
+      }
     }
 
     // Fortsetzen des Spiels (Kosten: 20 Herzen)
