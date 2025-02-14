@@ -206,7 +206,7 @@
       #character {
         width: 150px;
         height: 150px;
-        /* Verwende 70vh als Basis */
+        /* Basis: 70vh */
         top: 70vh;
         left: 50%;
         transform: translateX(-50%);
@@ -281,7 +281,7 @@
     </video>
   </div>
 
-  <!-- Neues Video-Element für die Spielanleitung (MP4, muted, playsinline, webkit-playsinline) -->
+  <!-- Neues Video-Element für die Spielanleitung -->
   <video id="instruction-video" muted playsinline webkit-playsinline>
     <source src="spielanleitung.mp4" type="video/mp4">
     Your browser does not support the video tag.
@@ -404,12 +404,12 @@
       if (!gameRunning || jumpCount >= 2) return;
       const character = document.getElementById("character");
       if (window.matchMedia("(pointer: coarse)").matches) {
-        // Mobile: Nutze einen dynamischen Basiswert (70vh)
+        // Mobile Endgeräte: Höhere Sprünge – Basis: 70vh
         const base = window.innerHeight * 0.7;
         if (jumpCount === 0) {
-          character.style.top = (base - 50) + "px"; // erster Sprung: 50px höher
+          character.style.top = (base - 250) + "px"; // Erster Sprung: 250px höher
         } else if (jumpCount === 1) {
-          character.style.top = (base - 100) + "px"; // zweiter Sprung: 100px höher
+          character.style.top = (base - 350) + "px"; // Zweiter Sprung: 350px höher
         }
         jumpCount++;
         setTimeout(() => {
@@ -419,9 +419,9 @@
       } else {
         // Desktop: Feste Werte
         if (jumpCount === 0) {
-          character.style.top = '400px'; // erster Sprung
+          character.style.top = '400px'; // Erster Sprung
         } else if (jumpCount === 1) {
-          character.style.top = '250px'; // zweiter Sprung
+          character.style.top = '250px'; // Zweiter (höherer) Sprung
         }
         jumpCount++;
         setTimeout(() => {
@@ -459,7 +459,8 @@
       if (window.matchMedia("(pointer: coarse)").matches) {
         alert("Auf mobilen Geräten kann das Fenster nicht automatisch geschlossen werden. Bitte schließen Sie das Browserfenster manuell.");
       } else {
-        window.location.href = "about:blank";
+        window.open('', '_self');
+        window.close();
       }
     }
 
