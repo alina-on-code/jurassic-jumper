@@ -367,11 +367,13 @@
     heart.style.left = window.innerWidth + 'px';
     
     if (window.matchMedia("(pointer: coarse)").matches) {
-      const base = window.innerHeight * 0.655;
+      const base = window.innerHeight * 0.66;
       const lower = base - 40;
       const upper = base + 10;
       const heartTop = lower + Math.random() * (upper - lower);
       heart.style.top = heartTop + "px";
+      heart.style.width = "40px";
+      heart.style.height = "33px";
     } else {
       // Auf Desktop-Geräten bleibt die bisherige Logik:
       heart.style.top = Math.random() > 0.5 ? '650px' : '500px';
@@ -413,7 +415,7 @@
       if (!gameRunning || jumpCount >= 2) return;
       const character = document.getElementById("character");
       if (window.matchMedia("(pointer: coarse)").matches) {
-        const base = window.innerHeight * 0.655;
+        const base = window.innerHeight * 0.66;
         if (jumpCount === 0) {
           character.style.top = (base - 150) + "px"; // Erster Sprung: 150px
         } else if (jumpCount === 1) {
@@ -423,7 +425,7 @@
         setTimeout(() => {
           character.style.top = base + "px";
           jumpCount = 0;
-        }, 1000);
+        }, 750);
       } else {
         // Desktop: Feste Werte
         if (jumpCount === 0) {
