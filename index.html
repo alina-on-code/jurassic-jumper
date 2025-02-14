@@ -280,7 +280,7 @@
     </video>
   </div>
 
-  <!-- Neues Video-Element für die Spielanleitung (jetzt MP4, muted, playsinline, webkit-playsinline) -->
+  <!-- Neues Video-Element für die Spielanleitung -->
   <video id="instruction-video" muted playsinline webkit-playsinline>
     <source src="spielanleitung.mp4" type="video/mp4">
     Your browser does not support the video tag.
@@ -408,10 +408,12 @@
         character.style.top = '250px'; // Zweiter (höherer) Sprung
       }
       jumpCount++;
+      // Bei Touch auf mobilen Geräten wird ein kürzerer Timeout genutzt
+      let timeoutDuration = window.matchMedia("(pointer: coarse)").matches ? 500 : 750;
       setTimeout(() => {
         character.style.top = '650px';
         jumpCount = 0;
-      }, 750);
+      }, timeoutDuration);
     }
 
     // Tastatursteuerung (Leertaste)
@@ -440,6 +442,7 @@
     // Beenden-Funktion
     function resume() {
       window.close();
+      alert("Auf mobilen Geräten kann das Fenster nicht automatisch geschlossen werden. Bitte schließen Sie das Browserfenster manuell.");
     }
 
     // Fortsetzen des Spiels (Kosten: 20 Herzen)
