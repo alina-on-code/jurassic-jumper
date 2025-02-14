@@ -405,7 +405,7 @@
       const character = document.getElementById("character");
       if (window.matchMedia("(pointer: coarse)").matches) {
         // Mobile Endgeräte: Höhere Sprünge – Basis: 70vh
-        const base = window.innerHeight * 0.5;
+        const base = window.innerHeight * 0.6;
         if (jumpCount === 0) {
           character.style.top = (base - 150) + "px"; // Erster Sprung: 250px höher
         } else if (jumpCount === 1) {
