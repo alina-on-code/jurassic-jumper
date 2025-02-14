@@ -1,167 +1,462 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="de" style="height: 100%;">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dino Jump</title>
-
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jump'n'Run Spiel</title>
   <style>
-    body {
-    font-family: Arial, sans-serif;
-    text-align: center;
-    background-color: #f4f4f4;
-    overflow: hidden;
-}
+    #website {
+      background-image: linear-gradient(to bottom, #a7d4ea 50%, #dba55e 50%, #dba55e 100%);
+      height: 100%;
+      background-repeat: no-repeat;
+    }
 
-#game-container {
-    position: relative;
-    width: 100vw;
-    height: 80vh;
-    background-color: lightblue;
-    border-bottom: 5px solid green;
-}
+    #character {
+      width: 200px;
+      height: 200px;
+      background-image: url(dinosaurier.png);
+      background-size: cover;
+      position: relative;
+      top: 650px;
+      left: 300px;
+      transition: top 350ms ease-out;
+    }
 
-#dino {
-    position: absolute;
-    bottom: 10vh;
-    left: 10vw;
-    width: 50px;
-    height: 50px;
-    background-color: brown;
-}
+    .stone {
+      position: absolute;
+    }
 
-.stone {
-    position: absolute;
-    width: 40px;
-    height: 40px;
-    background-color: gray;
-    bottom: 10vh;
-    right: 0;
-}
+    .small {
+      width: 150px;
+      height: 150px;
+      background-image: url(stein.png);
+      background-size: cover;
+      top: 720px;
+    }
 
-.hidden {
-    display: none;
-}
+    .large {
+      width: 150px;
+      height: 250px;
+      background-image: url(großerStein.png);
+      background-size: cover;
+      top: 610px;
+    }
 
-#start-button, #restart-button {
-    margin-top: 20px;
-    padding: 10px 20px;
-    font-size: 18px;
-    cursor: pointer;
-}
+    .heart {
+      width: 60px;
+      height: 50px;
+      background-image: url(herz.png);
+      background-size: cover;
+      position: absolute;
+    }
 
+    #startbox {
+      position: relative;
+      display: grid;
+      justify-content: center;
+      align-content: center;
+    }
+
+    #start {
+      display: grid;
+      justify-content: center;
+      align-items: center;
+      background-color: black;
+      width: 35em;
+      opacity: 100;
+      padding: 20px;
+    }
+
+    #starttext {
+      color: white;
+      font-weight: bold;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 30pt;
+      padding: 0;
+      margin: 10px;
+    }
+
+    #startbuttonbox {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #startbutton {
+      margin: 10px;
+      width: 150px;
+      height: 40px;
+      font-size: 12pt;
+    }
+
+    #gameoverbox {
+      position: relative;
+      display: grid;
+      justify-content: center;
+      align-content: center;
+    }
+
+    #gameover {
+      display: grid;
+      justify-content: center;
+      align-items: center;
+      background-color: black;
+      width: 30em;
+      opacity: 0;
+      padding: 20px;
+    }
+
+    #gotext {
+      color: white;
+      font-weight: bold;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 30pt;
+      padding: 0;
+      margin: 10px;
+    }
+
+    #gobuttons {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #gobutton-restart {
+      margin: 10px;
+      width: 150px;
+      height: 40px;
+      font-size: 12pt;
+    }
+
+    #gobutton-resume {
+      margin: 10px;
+      width: 150px;
+      height: 40px;
+      font-size: 12pt;
+    }
+
+    #gobuttoncont {
+      margin: 10px;
+      width: 320px;
+      height: 40px;
+      font-size: 12pt;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #gobuttoncont-herz {
+      height: 11pt;
+      margin: 0 1px 0 2px;
+    }
+
+    #herz-counter {
+      position: fixed;
+      top: 3em;
+      right: 3em;
+      width: 7em;
+      height: 3em;
+      background: rgba(255, 255, 255, 0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #herz-counter-bild {
+      width: 1.8em;
+      height: 1.8em;
+      margin-right: 5px;
+    }
+
+    #herz-counter-text {
+      font-size: 2em;
+    }
+
+    #video-hintergrund {
+      width: 100%;
+      height: 100%;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: -100;
+    }
+
+    /* Neues Video-Element für die Spielanleitung mit playsinline */
+    #instruction-video {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1000;
+      background: black;
+      playsinline: true;
+      -webkit-playsinline: true;
+    }
+
+    /* Anpassungen für mobile Endgeräte */
+    @media (max-width: 768px), (max-height: 800px) {
+      #character {
+        width: 150px;
+        height: 150px;
+        top: 70vh;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+      .small {
+        width: 100px;
+        height: 100px;
+        top: calc(70vh + 10px);
+      }
+      .large {
+        width: 100px;
+        height: 170px;
+        top: calc(70vh - 40px);
+      }
+      #start, #gameover {
+        width: 90%;
+        padding: 10px;
+      }
+      #starttext {
+        font-size: 20pt;
+      }
+      #startbutton {
+        width: 120px;
+        height: 35px;
+        font-size: 10pt;
+      }
+      #herz-counter {
+        top: 1em;
+        right: 1em;
+        width: 5em;
+        height: 2.5em;
+      }
+      #herz-counter-text {
+        font-size: 1.5em;
+      }
+    }
   </style>
-
-  
 </head>
-<body>
-    <div id="game-container">
-        <div id="dino"></div>
-    </div>
-    <button id="start-button">Start</button>
-    <div id="game-over-box" class="hidden">
-        <p>Game Over</p>
-        <button id="restart-button">Nochmal</button>
-    </div>
-    <script src="script.js"></script>
-</body>
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-    const dino = document.getElementById("dino");
-    const startButton = document.getElementById("start-button");
-    const restartButton = document.getElementById("restart-button");
-    const gameOverBox = document.getElementById("game-over-box");
-    const gameContainer = document.getElementById("game-container");
 
-    let gameRunning = false;
-    let gravity = 5;
-    let jumpStrength = 15;
-    let dinoVelocity = 0;
+<body id="website">
+  <div id="playground">
+    <div id="character"></div>
+    <div id="startbox">
+      <div id="start">
+        <p id="starttext">Bist du bereit loszuspringen?!</p>
+        <div id="startbuttonbox">
+          <!-- Start-Button ruft showInstructionVideo() auf -->
+          <button onclick="showInstructionVideo()" id="startbutton">Start</button>
+        </div>
+      </div>
+    </div>
+    <div id="gameoverbox">
+      <div id="gameover">
+        <p id="gotext">GAME OVER!</p>
+        <div id="gobuttons">
+          <button onclick="restart()" id="gobutton-restart">Neustart</button>
+          <button onclick="resume()" id="gobutton-resume">Beenden</button>
+        </div>
+        <button onclick="continuePlaying()" id="gobuttoncont">
+          Weiterspielen 20 <img id="gobuttoncont-herz" src="herz.png" alt="Herz">
+        </button>
+      </div>
+    </div>
+    <div id="herz-counter">
+      <img id="herz-counter-bild" src="herz.png" alt="Herzen">
+      <p id="herz-counter-text">0</p>
+    </div>
+    <video id="video-hintergrund" autoplay muted loop>
+      <source src="wuestenhintergrund.MP4" type="video/mp4">
+      <source src="wuestenhintergrund.MP4" type="video/ogg">
+      Your browser does not support the video tag.
+    </video>
+  </div>
 
-    function jump() {
-        if (dino.getBoundingClientRect().bottom >= window.innerHeight * 0.90) {
-            dinoVelocity = -jumpStrength;
+  <!-- Neues Video-Element für die Spielanleitung (jetzt MP4, muted, playsinline, webkit-playsinline) -->
+  <video id="instruction-video" muted playsinline webkit-playsinline>
+    <source src="spielanleitung.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
+
+  <script>
+    let gameRunning = false; // Spielstatus
+    let jumpCount = 0; // Doppelsprung-Logik
+    let stoneSpeed = 35; // Geschwindigkeit der Steine
+    let minDelay = 2000; // Mindestabstand zwischen Steinen
+    let difficultyInterval; // Intervall zur Erhöhung der Schwierigkeit
+    let heartCounter = 0; // Anzahl gesammelter Herzen
+    let stoneGenerationTimeout;
+    let heartGenerationTimeout;
+
+    // Registriere Touch-Listener für die Game Over-Buttons, sobald das DOM geladen ist
+    window.addEventListener('DOMContentLoaded', function () {
+      document.getElementById("startbutton").addEventListener("touchend", function (e) {
+        e.preventDefault();
+        showInstructionVideo();
+      });
+      document.getElementById("gobutton-restart").addEventListener("touchend", function (e) {
+        e.preventDefault();
+        restart();
+      });
+      document.getElementById("gobutton-resume").addEventListener("touchend", function (e) {
+        e.preventDefault();
+        resume();
+      });
+      document.getElementById("gobuttoncont").addEventListener("touchend", function (e) {
+        e.preventDefault();
+        continuePlaying();
+      });
+    });
+
+    // Zeigt das Anleitungsvideo an und startet danach das Spiel
+    function showInstructionVideo() {
+      document.getElementById("startbox").style.display = "none";
+      let instrVideo = document.getElementById("instruction-video");
+      instrVideo.style.display = "block";
+      instrVideo.play();
+      instrVideo.onended = function () {
+        instrVideo.style.display = "none";
+        startGame();
+      };
+    }
+
+    // Startet das eigentliche Spiel
+    function startGame() {
+      gameRunning = true;
+      const playground = document.getElementById("playground");
+      setInterval(() => {
+        if (!gameRunning) return;
+        const stones = document.querySelectorAll('.stone');
+        stones.forEach(stone => moveObject(stone, playground, true));
+        const hearts = document.querySelectorAll('.heart');
+        hearts.forEach(heart => moveObject(heart, playground, false));
+      }, 50);
+      generateStone();
+      generateHeart();
+      difficultyInterval = setInterval(() => {
+        if (minDelay > 1200) minDelay -= 100;
+        if (stoneSpeed < 60) stoneSpeed += 0.5;
+      }, 3000);
+    }
+
+    // Generierung von Steinen (global)
+    function generateStone() {
+      if (!gameRunning) return;
+      const playground = document.getElementById("playground");
+      const stone = document.createElement('div');
+      stone.className = 'stone ' + (Math.random() > 0.5 ? 'large' : 'small');
+      stone.style.left = window.innerWidth + 'px';
+      playground.appendChild(stone);
+      stoneGenerationTimeout = setTimeout(generateStone, minDelay + Math.random() * 500);
+    }
+
+    // Generierung von Herzen (global)
+    function generateHeart() {
+      if (!gameRunning) return;
+      const playground = document.getElementById("playground");
+      const heart = document.createElement('div');
+      heart.className = 'heart';
+      heart.style.left = window.innerWidth + 'px';
+      heart.style.top = Math.random() > 0.5 ? '650px' : '500px';
+      playground.appendChild(heart);
+      // Intervall auf 200 bis ca. 500ms gesetzt
+      heartGenerationTimeout = setTimeout(generateHeart, 200 + Math.random() * 300);
+    }
+
+    // Bewegt Objekte (Steine und Herzen) und prüft Kollisionen
+    function moveObject(obj, playground, isStone) {
+      const currentLeft = parseInt(obj.style.left, 10);
+      if (currentLeft <= 0) {
+        playground.removeChild(obj);
+      } else {
+        obj.style.left = (currentLeft - stoneSpeed) + 'px';
+      }
+      const charBounds = document.getElementById("character").getBoundingClientRect();
+      const objBounds = obj.getBoundingClientRect();
+      if (
+        charBounds.right > objBounds.left &&
+        charBounds.left < objBounds.right &&
+        charBounds.bottom > objBounds.top &&
+        charBounds.top < objBounds.bottom
+      ) {
+        if (isStone) {
+          gameRunning = false;
+          document.getElementById("gameover").style.opacity = 1;
+        } else {
+          heartCounter++;
+          document.getElementById("herz-counter-text").innerText = heartCounter;
+          obj.remove();
         }
+      }
     }
 
-    function gameLoop() {
-        if (!gameRunning) return;
-
-        // Schwerkraft
-        dinoVelocity += gravity * 0.1;
-        dino.style.bottom = Math.max(parseInt(dino.style.bottom) + dinoVelocity, 10) + "px";
-
-        moveObstacles();
-        detectCollision();
-
-        requestAnimationFrame(gameLoop);
+    // Sprung-Funktion, ausgelöst per Leertaste oder Fingertipp
+    function jump() {
+      if (!gameRunning || jumpCount >= 2) return;
+      const character = document.getElementById("character");
+      if (jumpCount === 0) {
+        character.style.top = '400px'; // Erster Sprung
+      } else if (jumpCount === 1) {
+        character.style.top = '250px'; // Zweiter (höherer) Sprung
+      }
+      jumpCount++;
+      setTimeout(() => {
+        character.style.top = '650px';
+        jumpCount = 0;
+      }, 750);
     }
 
-    function createObstacle() {
-        if (!gameRunning) return;
+    // Tastatursteuerung (Leertaste)
+    document.addEventListener('keydown', (event) => {
+      if (event.code === 'Space') jump();
+    });
 
-        const stone = document.createElement("div");
-        stone.classList.add("stone");
-        stone.style.left = "100vw"; 
-        gameContainer.appendChild(stone);
+    // Mobile Steuerung (Touch)
+    document.addEventListener('touchstart', (event) => {
+      event.preventDefault();
+      if (gameRunning) jump();
+    }, { passive: false });
 
-        setTimeout(createObstacle, Math.random() * 2000 + 1000);
+    // Game Over
+    function endGame() {
+      document.getElementById("gameover").style.opacity = 100;
+      gameRunning = false;
+      clearInterval(difficultyInterval);
     }
 
-    function moveObstacles() {
-        document.querySelectorAll(".stone").forEach(stone => {
-            let left = parseInt(window.getComputedStyle(stone).left);
-            stone.style.left = (left - 5) + "px";
-
-            if (left < -50) {
-                stone.remove();
-            }
-        });
+    // Neustart-Funktion
+    function restart() {
+      document.location.reload();
     }
 
-    function detectCollision() {
-        document.querySelectorAll(".stone").forEach(stone => {
-            let dinoRect = dino.getBoundingClientRect();
-            let stoneRect = stone.getBoundingClientRect();
-
-            if (
-                dinoRect.left < stoneRect.right &&
-                dinoRect.right > stoneRect.left &&
-                dinoRect.top < stoneRect.bottom &&
-                dinoRect.bottom > stoneRect.top
-            ) {
-                gameOver();
-            }
-        });
+    // Beenden-Funktion
+    function resume() {
+      window.close();
     }
 
-    function gameOver() {
-        gameRunning = false;
-        gameOverBox.classList.remove("hidden");
-    }
-
-    startButton.addEventListener("click", function () {
+    // Fortsetzen des Spiels (Kosten: 20 Herzen)
+    function continuePlaying() {
+      if (heartCounter >= 20) {
+        heartCounter -= 20;
+        document.getElementById("herz-counter-text").innerText = heartCounter;
+        const obstacles = document.querySelectorAll('.stone, .heart');
+        obstacles.forEach(obstacle => obstacle.remove());
+        document.getElementById("gameover").style.opacity = 0;
         gameRunning = true;
-        dino.style.bottom = "10vh";
-        gameOverBox.classList.add("hidden");
-        document.querySelectorAll(".stone").forEach(stone => stone.remove());
-
-        createObstacle();
-        gameLoop();
-    });
-
-    restartButton.addEventListener("click", function () {
-        gameOverBox.classList.add("hidden");
-        startButton.click();
-    });
-
-    document.addEventListener("keydown", function (e) {
-        if (e.key === " ") jump();
-    });
-
-    document.addEventListener("touchstart", function () {
-        jump();
-    }, { passive: true });
-});
-</script>
+        generateStone();
+        generateHeart();
+      } else {
+        alert("Nicht genug Herzen, um fortzufahren!");
+      }
+    }
+  </script>
+</body>
 </html>
